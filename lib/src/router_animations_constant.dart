@@ -49,4 +49,15 @@ extension TransitionsValue on TransitionsType {
         return const Offset(0, 0);
     }
   }
+
+  Matrix4 matrix4Value (double value){
+    switch (this) {
+      case TransitionsType.transformX:
+        return Matrix4.identity()..rotateX(value);
+      case TransitionsType.transformY:
+        return Matrix4.identity()..rotateY(value);
+      default:
+        return Matrix4.identity();
+    }
+  }
 }
