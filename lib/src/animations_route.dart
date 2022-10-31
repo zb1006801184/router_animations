@@ -29,10 +29,10 @@ class AnimationsRoute extends PageRoute {
   final Duration? animatedTransitionDuration;
 
   @override
-  Color? get barrierColor => null;
+  Color? barrierColor;
 
   @override
-  String? get barrierLabel => 'zzzsss';
+  String? barrierLabel;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
@@ -63,8 +63,7 @@ class AnimationsRoute extends PageRoute {
         return RotationTransition(turns: animation, child: child);
       case TransitionsType.transformY:
       case TransitionsType.transformX:
-        return transform(
-            animation, currentPageContext, child, transitionsType);
+        return transform(animation, currentPageContext, child, transitionsType);
       default:
         return silde(animation, transitionsType, child);
     }
