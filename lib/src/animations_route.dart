@@ -8,34 +8,43 @@ import 'package:router_animations/src/animated_transform.dart';
 import 'package:router_animations/src/router_animations_constant.dart';
 
 class AnimationsRoute extends PageRoute {
-  final Widget child;
-  final TransitionsType transitionsType;
-  final BuildContext currentPageContext;
-  final Widget fontWidget;
   AnimationsRoute(
-    this.child, {
+    this.page, {
     required this.currentPageContext,
     required this.transitionsType,
-    required this.fontWidget,
-  }) : super();
+    this.animatedTransitionDuration = const Duration(milliseconds: 300),
+  })  : assert(animatedTransitionDuration != null),
+        super();
+
+  ///当前页面
+  final Widget page;
+
+  ///转场动画类型
+  final TransitionsType transitionsType;
+
+  ///当前页面上下文
+  final BuildContext currentPageContext;
+
+  ///动画时间
+  final Duration? animatedTransitionDuration;
 
   @override
   Color? get barrierColor => null;
 
   @override
-  String? get barrierLabel => null;
+  String? get barrierLabel => 'zzzsss';
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation) {
-    return child;
+    return page;
   }
 
   @override
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 6000);
+  Duration get transitionDuration => animatedTransitionDuration!;
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
@@ -54,7 +63,8 @@ class AnimationsRoute extends PageRoute {
         return RotationTransition(turns: animation, child: child);
       case TransitionsType.transformY:
       case TransitionsType.transformX:
-        return transform(animation, currentPageContext,child,transitionsType);
+        return transform(
+            animation, currentPageContext, child, transitionsType);
       default:
         return silde(animation, transitionsType, child);
     }
@@ -82,20 +92,21 @@ class AnimationsRoute extends PageRoute {
       child: page,
     );
   }
-///
-///[animation]
-///[currentPageContext]当前页面的上下文，用于获取当前页面widget
-///[page]要跳转的页面
-///[transitionsType]转场动画类型
-///
-   static Widget transform(
+
+  ///
+  ///[animation]
+  ///[currentPageContext]当前页面的上下文，用于获取当前页面widget
+  ///[page]要跳转的页面
+  ///[transitionsType]转场动画类型
+  ///
+  static Widget transform(
     Animation<double> animation,
     BuildContext currentPageContext,
     Widget page,
     TransitionsType transitionsType,
   ) {
     return AnimatedTransform(
-      currentPageContext.findAncestorWidgetOfExactType() ?? Container(color: Colors.red,),
+      currentPageContext.findRootAncestorStateOfType()?.widget,
       page,
       transitionsType,
       position: animation,

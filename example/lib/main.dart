@@ -46,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SecondPage(),
                 transitionsType: TransitionsType.transformY,
                 currentPageContext: context,
-                fontWidget: widget,
               )
               );
             },
