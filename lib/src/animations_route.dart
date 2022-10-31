@@ -1,17 +1,22 @@
+/*
+ * @Description: 
+ * @Author: zhubiao
+ * @Date: 2022-10-31 15:05:51
+ */
 import 'package:flutter/material.dart';
-import 'package:router_animations/src/animated_slide.dart';
-import 'package:router_animations/src/animated_transform_x.dart';
-import 'package:router_animations/src/animated_transform_y.dart';
+import 'package:router_animations/src/animated_transform.dart';
 import 'package:router_animations/src/router_animations_constant.dart';
 
 class AnimationsRoute extends PageRoute {
   final Widget child;
   final TransitionsType transitionsType;
   final BuildContext currentPageContext;
+  final Widget fontWidget;
   AnimationsRoute(
     this.child, {
     required this.currentPageContext,
     required this.transitionsType,
+    required this.fontWidget,
   }) : super();
 
   @override
@@ -30,7 +35,7 @@ class AnimationsRoute extends PageRoute {
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration => const Duration(milliseconds: 6000);
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
@@ -40,68 +45,60 @@ class AnimationsRoute extends PageRoute {
       case TransitionsType.rightToLeft:
       case TransitionsType.topToBottom:
       case TransitionsType.bottomToTop:
-        return _silde(animation);
+        return silde(animation, transitionsType, child);
       case TransitionsType.scale:
-        return _scale(animation);
+        return ScaleTransition(scale: animation, child: child);
       case TransitionsType.fade:
-        return _fade(animation);
+        return FadeTransition(opacity: animation, child: child);
       case TransitionsType.rotation:
-        return _rotation(animation);
+        return RotationTransition(turns: animation, child: child);
       case TransitionsType.transformY:
-        return _transformY(animation, child);
       case TransitionsType.transformX:
-        return _transformX(animation, child);
+        return transform(animation, currentPageContext,child,transitionsType);
       default:
-        return _silde(animation);
+        return silde(animation, transitionsType, child);
     }
   }
 
-  Widget _silde(Animation<double> animation) {
-    return AnimatedSlideTransition(
-      child,
+  ///平移转场动画
+  ///[animation]
+  ///[transitionsType] 动画类型
+  ///[page] 下个页面
+  static Widget silde(
+    Animation<double> animation,
+    TransitionsType transitionsType,
+    Widget page,
+  ) {
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: transitionsType.offsetBeginValue,
+        end: const Offset(0.0, 0.0),
+      ).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: Curves.fastOutSlowIn,
+        ),
+      ),
+      child: page,
+    );
+  }
+///
+///[animation]
+///[currentPageContext]当前页面的上下文，用于获取当前页面widget
+///[page]要跳转的页面
+///[transitionsType]转场动画类型
+///
+   static Widget transform(
+    Animation<double> animation,
+    BuildContext currentPageContext,
+    Widget page,
+    TransitionsType transitionsType,
+  ) {
+    return AnimatedTransform(
+      currentPageContext.findAncestorWidgetOfExactType() ?? Container(color: Colors.red,),
+      page,
       transitionsType,
-      currentPageContext,
-      animation,
-    ).animatedBuild();
-  }
-
-  ///缩放
-  Widget _scale(Animation<double> animation) {
-    return ScaleTransition(
-      scale: animation,
-      child: child,
-    );
-  }
-
-  ///透明
-  Widget _fade(Animation<double> animation) {
-    return FadeTransition(
-      opacity: animation,
-      child: child,
-    );
-  }
-
-  ///旋转
-  Widget _rotation(Animation<double> animation) {
-    return RotationTransition(
-      turns: animation,
-      child: child,
-    );
-  }
-
-  Widget _transformY(Animation<double> animation, Widget backWidget) {
-    return AnimatedTransformY(
-      currentPageContext.findAncestorWidgetOfExactType() ?? Container(),
-      child,
-      animation: animation,
-    );
-  }
-
-  Widget _transformX(Animation<double> animation, Widget backWidget) {
-    return AnimatedTransformX(
-      currentPageContext.findAncestorWidgetOfExactType() ?? Container(),
-      child,
-      animation: animation,
+      position: animation,
     );
   }
 }

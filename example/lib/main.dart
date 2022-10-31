@@ -44,8 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               Navigator.of(context).push(AnimationsRoute(
                 const SecondPage(),
-                transitionsType: TransitionsType.bottomToTop,
+                transitionsType: TransitionsType.transformY,
                 currentPageContext: context,
+                fontWidget: widget,
               )
               );
             },
