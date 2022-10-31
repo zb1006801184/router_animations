@@ -1,43 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:router_animations/src/animated_slide.dart';
 import 'package:router_animations/src/animated_transform_x.dart';
 import 'package:router_animations/src/animated_transform_y.dart';
-
-enum TransitionsType {
-  ///从左到右
-  leftToRight,
-
-  ///从右到左
-  rightToLeft,
-
-  ///从上到下
-  topToBottom,
-
-  ///从下到上
-  bottomToTop,
-
-  ///缩放
-  scale,
-
-  ///透明
-  fade,
-
-  ///旋转
-  rotation,
-
-  ///上下翻转
-  transformY,
-
-  ///左右翻转
-  transformX
-}
+import 'package:router_animations/src/router_animations_constant.dart';
 
 class AnimationsRoute extends PageRoute {
   final Widget child;
   final TransitionsType transitionsType;
-  final Widget currentPage;
+  final BuildContext currentPageContext;
   AnimationsRoute(
     this.child, {
-    required this.currentPage,
+    required this.currentPageContext,
     required this.transitionsType,
   }) : super();
 
@@ -57,83 +30,43 @@ class AnimationsRoute extends PageRoute {
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 500);
+  Duration get transitionDuration => const Duration(milliseconds: 300);
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     switch (transitionsType) {
       case TransitionsType.leftToRight:
-        return leftToRight(animation);
       case TransitionsType.rightToLeft:
-        return rightToLeft(animation);
       case TransitionsType.topToBottom:
-        return topToBottom(animation);
       case TransitionsType.bottomToTop:
-        return bottomToTop(animation);
+        return _silde(animation);
       case TransitionsType.scale:
-        return scale(animation);
+        return _scale(animation);
       case TransitionsType.fade:
-        return fade(animation);
+        return _fade(animation);
       case TransitionsType.rotation:
-        return rotation(animation);
+        return _rotation(animation);
       case TransitionsType.transformY:
-        return transformY(animation, child);
+        return _transformY(animation, child);
       case TransitionsType.transformX:
-        return transformX(animation, child);
+        return _transformX(animation, child);
       default:
+        return _silde(animation);
     }
-    return SlideTransition(
-      position: Tween<Offset>(
-              begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
-          .animate(
-              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
-      child: this.child,
-    );
   }
 
-  Widget leftToRight(Animation<double> animation) {
-    return SlideTransition(
-      position: Tween<Offset>(
-              begin: const Offset(1.0, 0.0), end: const Offset(0.0, 0.0))
-          .animate(
-              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
-      child: child,
-    );
-  }
-
-  Widget rightToLeft(Animation<double> animation) {
-    return SlideTransition(
-      position: Tween<Offset>(
-              begin: const Offset(-1.0, 0.0), end: const Offset(0.0, 0.0))
-          .animate(
-              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
-      child: child,
-    );
-  }
-
-  Widget topToBottom(Animation<double> animation) {
-    return SlideTransition(
-      position: Tween<Offset>(
-              begin: const Offset(0.0, -1.0), end: const Offset(0.0, 0.0))
-          .animate(
-              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
-      child: child,
-    );
-  }
-
-  Widget bottomToTop(Animation<double> animation) {
-    return SlideTransition(
-      position: Tween<Offset>(
-              begin: const Offset(0.0, 1.0), end: const Offset(0.0, 0.0))
-          .animate(
-              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn)),
-      child: child,
-    );
+  Widget _silde(Animation<double> animation) {
+    return AnimatedSlideTransition(
+      child,
+      transitionsType,
+      currentPageContext,
+      animation,
+    ).animatedBuild();
   }
 
   ///缩放
-  Widget scale(Animation<double> animation) {
+  Widget _scale(Animation<double> animation) {
     return ScaleTransition(
       scale: animation,
       child: child,
@@ -141,8 +74,7 @@ class AnimationsRoute extends PageRoute {
   }
 
   ///透明
-
-  Widget fade(Animation<double> animation) {
+  Widget _fade(Animation<double> animation) {
     return FadeTransition(
       opacity: animation,
       child: child,
@@ -150,25 +82,24 @@ class AnimationsRoute extends PageRoute {
   }
 
   ///旋转
-
-  Widget rotation(Animation<double> animation) {
+  Widget _rotation(Animation<double> animation) {
     return RotationTransition(
       turns: animation,
       child: child,
     );
   }
 
-  Widget transformY(Animation<double> animation, Widget backWidget) {
+  Widget _transformY(Animation<double> animation, Widget backWidget) {
     return AnimatedTransformY(
-      currentPage,
+      currentPageContext.findAncestorWidgetOfExactType() ?? Container(),
       child,
       animation: animation,
     );
   }
 
-  Widget transformX(Animation<double> animation, Widget backWidget) {
+  Widget _transformX(Animation<double> animation, Widget backWidget) {
     return AnimatedTransformX(
-      currentPage,
+      currentPageContext.findAncestorWidgetOfExactType() ?? Container(),
       child,
       animation: animation,
     );

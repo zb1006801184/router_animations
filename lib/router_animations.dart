@@ -5,3 +5,4 @@
  */
 // library router_animations;
 export 'package:router_animations/src/animations_route.dart';
+export 'package:router_animations/src/router_animations_constant.dart';

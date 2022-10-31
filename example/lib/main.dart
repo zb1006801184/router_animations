@@ -37,18 +37,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: ListView(
         children: [
           GestureDetector(
             onTap: () {
               Navigator.of(context).push(AnimationsRoute(
                 const SecondPage(),
-                currentPage: widget,
-                transitionsType: TransitionsType.transformX,
-              ));
+                transitionsType: TransitionsType.bottomToTop,
+                currentPageContext: context,
+              )
+              );
             },
             child: const ListTile(title: Text('跳转')),
           ),
