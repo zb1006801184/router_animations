@@ -10,9 +10,10 @@ import 'package:router_animations/src/router_animations_constant.dart';
 class AnimationsRoute extends PageRoute {
   AnimationsRoute(
     this.page, {
-    required this.currentPageContext,
     required this.transitionsType,
     this.animatedTransitionDuration = const Duration(milliseconds: 300),
+    this.currentPageContext,
+    this.currentPageWidget,
   })  : assert(animatedTransitionDuration != null),
         super();
 
@@ -23,10 +24,16 @@ class AnimationsRoute extends PageRoute {
   final TransitionsType transitionsType;
 
   ///当前页面上下文
-  final BuildContext currentPageContext;
+  final BuildContext? currentPageContext;
 
   ///动画时间
   final Duration? animatedTransitionDuration;
+
+  ///
+  ///当前页面widget
+  ///翻转动画时需要传，否则翻转动画时，正面空白
+  ///
+  final Widget? currentPageWidget;
 
   @override
   Color? barrierColor;
@@ -63,7 +70,7 @@ class AnimationsRoute extends PageRoute {
         return RotationTransition(turns: animation, child: child);
       case TransitionsType.transformY:
       case TransitionsType.transformX:
-        return transform(animation, currentPageContext, child, transitionsType);
+        return transform(animation, currentPageWidget, child, transitionsType);
       default:
         return silde(animation, transitionsType, child);
     }
@@ -100,12 +107,12 @@ class AnimationsRoute extends PageRoute {
   ///
   static Widget transform(
     Animation<double> animation,
-    BuildContext currentPageContext,
+    Widget? currentPageWidget,
     Widget page,
     TransitionsType transitionsType,
   ) {
     return AnimatedTransform(
-      currentPageContext.findRootAncestorStateOfType()?.widget,
+      currentPageWidget,
       page,
       transitionsType,
       position: animation,

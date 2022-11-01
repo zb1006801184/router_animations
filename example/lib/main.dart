@@ -44,10 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               Navigator.of(context).push(AnimationsRoute(
                 const SecondPage(),
-                transitionsType: TransitionsType.transformY,
-                currentPageContext: context,
-              )
-              );
+                transitionsType: TransitionsType.rightToLeft,
+              ));
             },
             child: const ListTile(title: Text('跳转')),
           ),

@@ -1,7 +1,7 @@
 name: router_animations
-description: A new Flutter package project.
+description: 一个简单的页面转场动画库
 version: 0.0.1
-homepage:
+homepage: https://github.com/zb1006801184/router_animations
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
