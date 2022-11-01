@@ -1,3 +1,4 @@
+
 ## 0.0.1
 
-* TODO: Describe initial release.
+* 常见的转场动画类型（平移、旋转、渐变、翻转）.
