@@ -1,10 +1,10 @@
 name: router_animations
-description: 一个简单的页面转场动画库
-version: 0.0.1
+description: 页面转场动画库(包括：平移、渐变、旋转、翻转、渐变旋转组)
+version: 0.0.2
 homepage: https://github.com/zb1006801184/router_animations
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
+  sdk: ">=2.12.0 <3.0.5"
   flutter: ">=1.17.0"
 
 dependencies:
